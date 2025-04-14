@@ -14,8 +14,8 @@ La forma más sencilla de poner en marcha ambos microservicios es utilizando Doc
 1.  **Clona el repositorio:**
 
     ```bash
-    git clone [https://github.com/dserodio?tab=repositories](https://github.com/dserodio?tab=repositories)
-    cd [nombre del repositorio]
+    git clone https://github.com/KevinCaicedo1/micros-bank
+    cd micros-bank
     ```
 
 2.  **Ejecuta Docker Compose:**
