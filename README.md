@@ -1,11 +1,22 @@
-# Microservicios Spring Boot: Customer y Movements
+# Microservicios Spring Boot: Customer y Movements (Arquitectura Hexagonal y Reactiva)
 
-Este repositorio contiene dos microservicios Spring Boot, "customer" y "movements", diseñados para operar de forma independiente y comunicarse entre sí.
+Este repositorio contiene dos microservicios Spring Boot, "customer" y "movements", implementados utilizando la **arquitectura hexagonal** para una clara separación de responsabilidades y la **programación reactiva** con Spring WebFlux para un rendimiento óptimo.
+
+## Tecnologías Clave
+
+* **Spring Boot:** Framework para la creación de aplicaciones Java autónomas y de nivel empresarial.
+* **Arquitectura Hexagonal (Puertos y Adaptadores):** Patrón de diseño para desacoplar el núcleo de la aplicación de las dependencias externas.
+* **Programación Reactiva (Spring WebFlux):** Modelo de programación asíncrono y no bloqueante para manejar grandes volúmenes de solicitudes.
+* **JPA (Java Persistence API):** Estándar para la gestión de datos en aplicaciones Java.
+* **Gradle:** Sistema de automatización de compilación.
+* **Docker y Docker Compose:** Para la contenerización y despliegue rápido de los microservicios.
+* **Postman:** Colección incluida para facilitar las pruebas de los endpoints de los microservicios.
 
 ## Requisitos Previos
 
 * **Docker:** Asegúrate de tener Docker instalado en tu sistema. Puedes descargarlo desde [https://www.docker.com/get-started](https://www.docker.com/get-started).
 * **Docker Compose:** Docker Compose también es necesario. Generalmente se instala junto con Docker Desktop.
+* **Postman:** Para importar y utilizar la colección de pruebas incluida.
 
 ## Despliegue Rápido con Docker Compose
 
