@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: movement
+    
+  r2dbc:
+    url: r2dbc:postgresql://username:password@localhost:5433/db_movements
+    username: username
+    password: password
+  datasource:
+    url: jdbc:postgresql://localhost:5433/db_movements
+    username: username
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8082

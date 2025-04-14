@@ -1,0 +1,285 @@
+openapi: 3.0.0
+info:
+  title: Bank Account Service API
+  description: API para gestión de cuentas, movimientos y reportes bancarios.
+  version: "1.0"
+paths:
+  /accounts/{accountNumber}:
+    get:
+      summary: Obtener cuenta por número
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalles de la cuenta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RSAccount'
+
+    put:
+      summary: Actualizar cuenta
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RQUpdateAccount'
+      responses:
+        '200':
+          description: Cuenta actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RSAccount'
+
+    delete:
+      summary: Eliminar cuenta
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cuenta eliminada
+
+  /accounts:
+    get:
+      summary: Obtener todas las cuentas
+      responses:
+        '200':
+          description: Lista de cuentas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RSAccount'
+
+    post:
+      summary: Crear cuenta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RQCreateAccount'
+      responses:
+        '201':
+          description: Cuenta creada
+
+  /accounts/client/{clientId}:
+    get:
+      summary: Obtener cuentas por ID de cliente
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de cuentas por cliente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RSAccount'
+
+  /movements:
+    get:
+      summary: Obtener todos los movimientos
+      responses:
+        '200':
+          description: Lista de movimientos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RSMovement'
+
+    post:
+      summary: Crear movimiento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RQCreateMovement'
+      responses:
+        '201':
+          description: Movimiento creado
+
+  /movements/account/{accountNumber}:
+    get:
+      summary: Obtener movimientos por número de cuenta
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de movimientos por cuenta
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RSMovement'
+
+  /reports/{clientId}:
+    get:
+      summary: Obtener reportes por ID de cliente y fecha
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Reporte del cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RSReport'
+
+components:
+  schemas:
+    RSAccount:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+        accountType:
+          type: string
+        initialBalance:
+          type: number
+        accountStatus:
+          type: boolean
+        clientId:
+          type: string
+          format: uuid
+
+    RQCreateAccount:
+      type: object
+      properties:
+        accountType:
+          type: string
+        initialBalance:
+          type: number
+        clientId:
+          type: string
+          format: uuid
+
+    RQUpdateAccount:
+      type: object
+      properties:
+        accountType:
+          type: string
+        initialBalance:
+          type: number
+        accountStatus:
+          type: boolean
+
+    RSMovement:
+      type: object
+      properties:
+        movementId:
+          type: string
+          format: uuid
+        createDate:
+          type: string
+          format: date-time
+        movementType:
+          type: string
+        movementValue:
+          type: number
+        initialBalance:
+          type: number
+        availableBalance:
+          type: number
+        accountNumber:
+          type: string
+
+    RQCreateMovement:
+      type: object
+      properties:
+        movementType:
+          type: string
+        movementValue:
+          type: number
+        accountNumber:
+          type: string
+
+    RSReport:
+      type: object
+      properties:
+        customerName:
+          type: string
+        customerStatus:
+          type: boolean
+        customerIdentification:
+          type: string
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/RSReportAccount'
+
+    RSReportAccount:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+        accountType:
+          type: string
+        initialBalance:
+          type: number
+        accountStatus:
+          type: boolean
+        movements:
+          type: array
+          items:
+            $ref: '#/components/schemas/RSReportMovement'
+
+    RSReportMovement:
+      type: object
+      properties:
+        movementType:
+          type: string
+        amount:
+          type: number
+        movementDate:
+          type: string
+        initialBalance:
+          type: number
+        availableBalance:
+          type: number

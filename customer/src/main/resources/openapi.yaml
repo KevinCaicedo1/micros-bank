@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Customer API
+  version: 1.0.0
+paths:
+  /api/v1/customers:
+    post:
+      summary: Create a new customer
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RQCreateCustomer'
+      responses:
+        '201':
+          description: Customer created
+
+  /api/v1/customers/{customer_id}:
+    get:
+      summary: Get customer by ID
+      operationId: getCustomerById
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Customer retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+    put:
+      summary: Update existing customer
+      operationId: updateCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RQUpdateCustomer'
+      responses:
+        '204':
+          description: Customer updated
+
+    delete:
+      summary: Delete customer by ID
+      operationId: deleteCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Customer deleted successfully
+
+components:
+  schemas:
+    RQCreateCustomer:
+      type: object
+      required:
+        - name
+        - gender
+        - identification
+        - address
+        - phone
+        - password
+        - isActive
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+        isActive:
+          type: boolean
+
+    RQUpdateCustomer:
+      type: object
+      required:
+        - name
+        - gender
+        - identification
+        - address
+        - phone
+        - password
+        - isActive
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+        isActive:
+          type: boolean
+
+    CustomerResponse:
+      type: object
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        gender:
+          type: string
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        isActive:
+          type: boolean

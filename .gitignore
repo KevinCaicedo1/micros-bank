@@ -1,0 +1,74 @@
+# Ignorar directorios y archivos de compilación de Gradle
+customer/build/
+movements/build/
+customer/.gradle/
+movements/.gradle/
+customer/bin/
+movements/bin/
+customer/.settings/
+movements/.settings/
+customer/.classpath
+movements/.classpath
+customer/.project
+movements/.project
+customer/*.iml
+movements/*.iml
+customer/.idea/
+movements/.idea/
+
+# Ignorar archivos de configuración de IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Ignorar archivos de compilación de Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar archivos de configuración de Spring Boot
+customer/application*.properties
+movements/application*.properties
+customer/application*.yml
+movements/application*.yml
+
+# Ignorar archivos de caché de Gradle
+.gradle/
+/build/
+
+# Ignorar archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración de Eclipse
+.settings/
+.classpath
+.project
+
+# Ignorar archivos de configuración de IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Ignorar archivos de configuración de NetBeans
+nbproject/
+build/
+dist/
+.nbattrs
+
+# Ignorar archivos de configuración de Visual Studio Code
+.vscode/
+
+# Ignorar archivos de configuración de Maven
+target/
+
+# Ignorar archivos de configuración de Docker
+docker-compose.yml
+docker-compose.override.yml
+Dockerfile

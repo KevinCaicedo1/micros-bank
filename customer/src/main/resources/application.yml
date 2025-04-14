@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: customer
+    
+  r2dbc:
+    url: r2dbc:postgresql://username:password@localhost:5432/db_customer
+    username: username
+    password: password
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_customer
+    username: username
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: accounts-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+server:
+  port: 8081
