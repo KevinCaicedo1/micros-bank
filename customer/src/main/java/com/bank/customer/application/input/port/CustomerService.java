@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.bank.customer.domain.CustomerDom;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface CustomerService {
@@ -14,5 +15,6 @@ public interface CustomerService {
     Mono<Void> updateCustomer(UUID customerId, CustomerDom customerDom);
     Mono<Void> deleteCustomer(UUID customerId);
     Mono<Void> deleteCustomerByIdentification(String identification);
+    Flux<CustomerDom> getAllCustomers();
     
 } 

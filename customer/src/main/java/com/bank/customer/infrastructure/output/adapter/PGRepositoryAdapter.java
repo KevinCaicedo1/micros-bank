@@ -13,6 +13,7 @@ import com.bank.customer.infrastructure.output.repository.entity.CustomerEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Primary
@@ -71,6 +72,14 @@ public class PGRepositoryAdapter implements RepositoryPort {
                 })
                 .doOnNext(updatedCustomer -> log.info("Customer updated successfully: {}", updatedCustomer))
                 .doOnError(error -> log.error("Error updating customer: {}", error.getMessage()));
+    }
+
+    @Override
+    public Flux<CustomerEntity> findAllCustomers() {
+        log.info("Finding all customers");
+        return customerRepository.findAllCustomers()
+                .doOnNext(customer -> log.info("Customer found: {}", customer))
+                .doOnError(error -> log.error("Error finding all customers: {}", error.getMessage()));
     }
 
 }

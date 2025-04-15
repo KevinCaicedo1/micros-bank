@@ -5,6 +5,8 @@ import com.bank.movement.domain.RSCustomerDom;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,15 +20,15 @@ import java.util.UUID;
 public class CustomerServiceClientImpl implements CustomerServiceClient {
 
     private final WebClient.Builder webClientBuilder;
-
-    private static final String CUSTOMER_SERVICE_URL = "http://ms1:8081/api/v1/customers";
+    @Value("${custom.service-url}")
+    private String customerServiceUrl;
 
     @Override
     public Mono<RSCustomerDom> getCustomerById(UUID customerId) {
         log.info("Fetching customer information for customerId: {}", customerId);
         return webClientBuilder.build()
                 .get()
-                .uri(CUSTOMER_SERVICE_URL + "/{customerId}", customerId)
+                .uri(customerServiceUrl + "/{customerId}", customerId)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
                     log.error("Client error while fetching customer information: {}", clientResponse.statusCode());

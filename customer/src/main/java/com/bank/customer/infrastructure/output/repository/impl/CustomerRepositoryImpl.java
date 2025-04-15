@@ -4,9 +4,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.reactive.TransactionalOperator;
 
-import com.bank.customer.application.service.CustomerTransactionalService;
 import com.bank.customer.domain.enums.ErrorMessage;
 import com.bank.customer.infrastructure.exception.CustomerException;
 import com.bank.customer.infrastructure.output.repository.CustomerJPARepository;
@@ -15,8 +13,8 @@ import com.bank.customer.infrastructure.output.repository.entity.CustomerEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,7 +22,6 @@ import reactor.core.scheduler.Schedulers;
 public class CustomerRepositoryImpl implements CustomerRepository {
 
     private final CustomerJPARepository customerJPARepository;
-    private final CustomerTransactionalService customerTransactionalService;
 
     @Override
     public Mono<Void> save(CustomerEntity customerEntity) {
@@ -69,12 +66,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             log.error("Customer not found with ID: {}", customerId);
             return Mono.error(new CustomerException(ErrorMessage.CUSTOMER_NOT_FOUND.message(), HttpStatus.NOT_FOUND));
         }
-        return Mono.fromRunnable(() -> customerTransactionalService.deleteCustomer(customerId))
-                .subscribeOn(Schedulers.boundedElastic())
-                .doOnSuccess(aVoid -> log.info("Customer deleted successfully with ID: {}", customerId))
+        return Mono.fromRunnable(() -> customerJPARepository.deleteById(customerEntity.getId()))
+                .doOnSuccess(aVoid -> log.info("Customer deleted successfully: {}", customerId))
                 .doOnError(error -> log.error("Error deleting customer: {}", error.getMessage()))
                 .then();
-
     }
 
     @Override
@@ -90,6 +85,14 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 .doOnSuccess(aVoid -> log.info("Customer updated successfully: {}", customerEntity))
                 .doOnError(error -> log.error("Error updating customer: {}", error.getMessage()))
                 .then();
+    }
+
+    @Override
+    public Flux<CustomerEntity> findAllCustomers() {
+        log.info("Finding all customers");
+        return Flux.fromIterable(customerJPARepository.findAll())
+                .doOnNext(customer -> log.info("Customer found: {}", customer))
+                .doOnError(error -> log.error("Error finding all customers: {}", error.getMessage()));
     }
 
 }

@@ -11,6 +11,7 @@ import com.bank.customer.infrastructure.output.adapter.mapper.PGRepositoryMapper
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -71,6 +72,15 @@ public class CustomerServiceImpl implements CustomerService {
                 .flatMap(customer -> repositoryPort.deleteByCustomerId(customer.getCustomerId()))
                 .doOnSuccess(aVoid -> log.info("Customer deleted successfully"))
                 .doOnError(error -> log.error("Error deleting customer by identification: {}", error.getMessage()));
+    }
+
+    @Override
+    public Flux<CustomerDom> getAllCustomers() {
+        log.info("Fetching all customers");
+        return repositoryPort.findAllCustomers()
+                .map(pgRepositoryMapper::toDomain)
+                .doOnNext(customer -> log.info("Customer found: {}", customer))
+                .doOnError(error -> log.error("Error fetching all customers: {}", error.getMessage()));
     }
 
     

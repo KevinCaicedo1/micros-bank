@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bank.customer.infrastructure.output.repository.entity.CustomerEntity;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -16,6 +17,7 @@ public interface CustomerRepository {
     Mono<CustomerEntity> findByIdentification(String identification); // Find a customer by identification
     Mono<Void> deleteByCustomerId(UUID customerId); // Delete a customer by ID
     Mono<Void> update(CustomerEntity customerEntity); // Update a customer entity
+    Flux<CustomerEntity> findAllCustomers(); 
 
     
 } 

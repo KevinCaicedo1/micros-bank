@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.bank.customer.domain.CustomerDom;
 import com.bank.customer.infrastructure.output.repository.entity.CustomerEntity;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface RepositoryPort {
@@ -13,4 +14,5 @@ public interface RepositoryPort {
     Mono<CustomerEntity> findByIdentification(String identification);
     Mono<Void> deleteByCustomerId(UUID customerId);
     Mono<Void> update(UUID customerId, CustomerDom customerDom);
+    Flux<CustomerEntity> findAllCustomers();
 }

@@ -18,6 +18,7 @@ import com.bank.customer.infrastructure.input.adapter.rest.model.RQUpdateCustome
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -68,6 +69,16 @@ public class CustomerController implements ApiApi {
                 .doOnSuccess(aVoid -> log.info("Customer updated successfully"))
                 .doOnError(error -> log.error("Error updating customer: {}", error.getMessage()))
                 .then(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
+    }
+
+    @Override
+    public Mono<ResponseEntity<Flux<CustomerResponse>>> getAllCustomers(ServerWebExchange exchange) {
+        log.info("Fetching all customers");
+        return Mono.just(ResponseEntity.ok()
+                .body(customerService.getAllCustomers()
+                        .map(customerMapper::toCustomerResponse)
+                        .doOnNext(customer -> log.info("Customer found: {}", customer))
+                        .doOnError(error -> log.error("Error fetching all customers: {}", error.getMessage()))));
     }
 
 

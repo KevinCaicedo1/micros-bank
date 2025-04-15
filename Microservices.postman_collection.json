@@ -46,6 +46,27 @@
 			"response": []
 		},
 		{
+			"name": "get_all_clients",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/v1/customers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "create_client",
 			"request": {
 				"auth": {
@@ -146,7 +167,7 @@
 					"urlencoded": []
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/v1/customers/d16e85ce-c20b-47ba-a352-188eb01a4a37",
+					"raw": "http://localhost:8081/api/v1/customers/550e8400-e29b-41d4-a716-446655440101",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -156,7 +177,7 @@
 						"api",
 						"v1",
 						"customers",
-						"d16e85ce-c20b-47ba-a352-188eb01a4a37"
+						"550e8400-e29b-41d4-a716-446655440101"
 					]
 				}
 			},
