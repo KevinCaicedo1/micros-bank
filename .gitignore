@@ -67,8 +67,3 @@ dist/
 
 # Ignorar archivos de configuración de Maven
 target/
-
-# Ignorar archivos de configuración de Docker
-docker-compose.yml
-docker-compose.override.yml
-Dockerfile

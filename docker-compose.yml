@@ -1,0 +1,52 @@
+
+services:
+  ms1:
+    build:
+      context: ./customer 
+    container_name: ms1
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db_customer
+      - SPRING_DATASOURCE_USERNAME=username
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+
+  ms2:
+    build:
+      context: ./movements
+    container_name: ms2
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db2:5432/db_movements
+      - SPRING_DATASOURCE_USERNAME=username
+      - SPRING_DATASOURCE_PASSWORD=password
+      - CUSTOMER_SERVICE_URL=http://ms1:8081/api/v1/customers
+    depends_on:
+      - db2
+      - ms1
+    ports:
+      - "8082:8082"
+  db:
+    image: postgres:16.4
+    container_name: db_microservicioCustomer
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db_customer
+    volumes:
+      - ./microservicio1.sql:/docker-entrypoint-initdb.d/microservicio1.sql
+    ports:
+      - "5432:5432"
+  
+  db2:
+    image: postgres:16.4
+    container_name: db_microservicioAccount
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db_movements
+    volumes:
+      - ./microservicio2.sql:/docker-entrypoint-initdb.d/microservicio2.sql
+    ports:
+      - "5433:5432"
