@@ -40,6 +40,7 @@ dependencies {
 	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// r2dbc
 	//implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 	//implementation 'org.postgresql:r2dbc-postgresql'
