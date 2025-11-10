@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.bank.customer.application.output.port.RepositoryPort;
+import com.bank.customer.application.output.port.CustomerRepositoryPort;
 import com.bank.customer.application.service.CustomerServiceImpl;
 import com.bank.customer.domain.CustomerDom; 
 import com.bank.customer.infrastructure.output.adapter.mapper.PGRepositoryMapper; 
@@ -32,7 +32,7 @@ private static final String INVALID_CUSTOMER_ID = "00000000-0000-0000-0000-00000
 private static final String NOT_FOUND_MESSAGE = "Customer not found";
 
 @Mock
-private RepositoryPort repositoryPort;
+private CustomerRepositoryPort repositoryPort;
 
 @Mock
 private PGRepositoryMapper pgRepositoryMapper;
@@ -75,18 +75,15 @@ void shouldReturnErrorWhenCreateCustomerFails() {
 @DisplayName("shouldReturnCustomerWhenGetCustomerByIdIsSuccessful")
 void shouldReturnCustomerWhenGetCustomerByIdIsSuccessful() {
     UUID customerId = UUID.fromString(MockDataUtils.CUSTOMER_ID);
-    CustomerEntity entity = MockDataUtils.getCustomerEntity();
     CustomerDom dom = MockDataUtils.getCustomerDom();
 
-    when(repositoryPort.findByCustomerId(customerId)).thenReturn(Mono.just(entity));
-    when(pgRepositoryMapper.toDomain(entity)).thenReturn(dom);
+    when(repositoryPort.findByCustomerId(customerId)).thenReturn(Mono.just(dom));
 
     StepVerifier.create(customerServiceImpl.getCustomerById(customerId))
             .expectNext(dom)
             .verifyComplete();
 
     verify(repositoryPort).findByCustomerId(customerId);
-    verify(pgRepositoryMapper).toDomain(entity);
 }
 
 @Test
@@ -106,18 +103,15 @@ void shouldReturnEmptyWhenCustomerByIdNotFound() {
 @DisplayName("shouldReturnCustomerWhenGetCustomerByIdentificationIsSuccessful")
 void shouldReturnCustomerWhenGetCustomerByIdentificationIsSuccessful() {
     String identification = MockDataUtils.IDENTIFICATION;
-    CustomerEntity entity = MockDataUtils.getCustomerEntity();
     CustomerDom dom = MockDataUtils.getCustomerDom();
 
-    when(repositoryPort.findByIdentification(identification)).thenReturn(Mono.just(entity));
-    when(pgRepositoryMapper.toDomain(entity)).thenReturn(dom);
-
+    when(repositoryPort.findByIdentification(identification)).thenReturn(Mono.just(dom));
+   
     StepVerifier.create(customerServiceImpl.getCustomerByIdentification(identification))
             .expectNext(dom)
             .verifyComplete();
 
     verify(repositoryPort).findByIdentification(identification);
-    verify(pgRepositoryMapper).toDomain(entity);
 }
 
 @Test
@@ -195,26 +189,26 @@ void shouldReturnErrorWhenDeleteCustomerFails() {
 @DisplayName("shouldDeleteCustomerByIdentificationSuccessfully")
 void shouldDeleteCustomerByIdentificationSuccessfully() {
     String identification = MockDataUtils.IDENTIFICATION;
-    CustomerEntity entity = MockDataUtils.getCustomerEntity();
+    CustomerDom entity = MockDataUtils.getCustomerDom();
 
     when(repositoryPort.findByIdentification(identification)).thenReturn(Mono.just(entity));
-    when(repositoryPort.deleteByCustomerId(entity.getCustomerId())).thenReturn(Mono.empty());
+    when(repositoryPort.deleteByCustomerId(UUID.fromString(entity.getCustomerId()))).thenReturn(Mono.empty());
 
     StepVerifier.create(customerServiceImpl.deleteCustomerByIdentification(identification))
             .verifyComplete();
 
     verify(repositoryPort).findByIdentification(identification);
-    verify(repositoryPort).deleteByCustomerId(entity.getCustomerId());
+    verify(repositoryPort).deleteByCustomerId(UUID.fromString(entity.getCustomerId()));
 }
 
 @Test
 @DisplayName("shouldReturnErrorWhenDeleteCustomerByIdentificationFails")
 void shouldReturnErrorWhenDeleteCustomerByIdentificationFails() {
     String identification = MockDataUtils.IDENTIFICATION;
-    CustomerEntity entity = MockDataUtils.getCustomerEntity();
+    CustomerDom entity = MockDataUtils.getCustomerDom();
 
     when(repositoryPort.findByIdentification(identification)).thenReturn(Mono.just(entity));
-    when(repositoryPort.deleteByCustomerId(entity.getCustomerId())).thenReturn(Mono.error(new RuntimeException("Delete failed")));
+    when(repositoryPort.deleteByCustomerId(UUID.fromString(entity.getCustomerId()))).thenReturn(Mono.error(new RuntimeException("Delete failed")));
 
     StepVerifier.create(customerServiceImpl.deleteCustomerByIdentification(identification))
             .expectErrorMatches(throwable -> throwable instanceof RuntimeException &&
@@ -222,24 +216,21 @@ void shouldReturnErrorWhenDeleteCustomerByIdentificationFails() {
             .verify();
 
     verify(repositoryPort).findByIdentification(identification);
-    verify(repositoryPort).deleteByCustomerId(entity.getCustomerId());
+    verify(repositoryPort).deleteByCustomerId(UUID.fromString(entity.getCustomerId()));
 }
 
 @Test
 @DisplayName("shouldReturnAllCustomersSuccessfully")
 void shouldReturnAllCustomersSuccessfully() {
-    CustomerEntity entity = MockDataUtils.getCustomerEntity();
     CustomerDom dom = MockDataUtils.getCustomerDom();
 
-    when(repositoryPort.findAllCustomers()).thenReturn(Flux.just(entity));
-    when(pgRepositoryMapper.toDomain(entity)).thenReturn(dom);
+    when(repositoryPort.findAllCustomers()).thenReturn(Flux.just(dom));
 
     StepVerifier.create(customerServiceImpl.getAllCustomers())
             .expectNext(dom)
             .verifyComplete();
 
     verify(repositoryPort).findAllCustomers();
-    verify(pgRepositoryMapper).toDomain(entity);
 }
 
 @Test

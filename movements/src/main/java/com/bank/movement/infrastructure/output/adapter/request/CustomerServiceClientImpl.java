@@ -1,6 +1,6 @@
 package com.bank.movement.infrastructure.output.adapter.request;
 
-import com.bank.movement.application.input.port.CustomerServiceClient;
+import com.bank.movement.application.output.port.CustomerClientPort;
 import com.bank.movement.domain.RSCustomerDom;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomerServiceClientImpl implements CustomerServiceClient {
+public class CustomerServiceClientImpl implements CustomerClientPort {
 
     private final WebClient.Builder webClientBuilder;
     @Value("${custom.service-url}")

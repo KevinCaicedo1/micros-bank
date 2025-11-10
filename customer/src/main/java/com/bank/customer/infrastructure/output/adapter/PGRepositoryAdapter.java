@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import com.bank.customer.application.output.port.RepositoryPort;
+import com.bank.customer.application.output.port.CustomerRepositoryPort;
 import com.bank.customer.domain.CustomerDom;
 import com.bank.customer.infrastructure.output.adapter.mapper.PGRepositoryMapper;
 import com.bank.customer.infrastructure.output.repository.CustomerRepository;
@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class PGRepositoryAdapter implements RepositoryPort {
+public class PGRepositoryAdapter implements CustomerRepositoryPort {
 
     private final CustomerRepository customerRepository;
     private final PGRepositoryMapper pgRepositoryMapper;
@@ -36,17 +36,19 @@ public class PGRepositoryAdapter implements RepositoryPort {
     }
 
     @Override
-    public Mono<CustomerEntity> findByCustomerId(UUID customerId) {
+    public Mono<CustomerDom> findByCustomerId(UUID customerId) {
         log.info("Finding customer by ID: {}", customerId);
         return customerRepository.findByCustomerId(customerId)
+                .map(pgRepositoryMapper::toDomain)
                 .doOnNext(customer -> log.info("Customer found: {}", customer))
                 .doOnError(error -> log.error("Error finding customer by ID: {}", error.getMessage()));
     }
 
     @Override
-    public Mono<CustomerEntity> findByIdentification(String identification) {
+    public Mono<CustomerDom> findByIdentification(String identification) {
         log.info("Finding customer by identification: {}", identification);
         return customerRepository.findByIdentification(identification)
+                .map(pgRepositoryMapper::toDomain)
                 .doOnNext(customer -> log.info("Customer found by identification: {}", customer))
                 .doOnError(error -> log.error("Error finding customer by identification: {}", error.getMessage()));
     }
@@ -75,9 +77,10 @@ public class PGRepositoryAdapter implements RepositoryPort {
     }
 
     @Override
-    public Flux<CustomerEntity> findAllCustomers() {
+    public Flux<CustomerDom> findAllCustomers() {
         log.info("Finding all customers");
         return customerRepository.findAllCustomers()
+                .map(pgRepositoryMapper::toDomain)
                 .doOnNext(customer -> log.info("Customer found: {}", customer))
                 .doOnError(error -> log.error("Error finding all customers: {}", error.getMessage()));
     }

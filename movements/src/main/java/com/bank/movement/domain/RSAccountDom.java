@@ -17,6 +17,7 @@ import lombok.Generated;
 @Generated
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class RSAccountDom {
+     UUID accountId;
      String accountNumber;
      String accountType;
      Double initialBalance;
