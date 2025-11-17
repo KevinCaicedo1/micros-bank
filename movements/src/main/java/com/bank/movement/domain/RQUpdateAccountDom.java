@@ -1,9 +1,11 @@
 package com.bank.movement.domain;
-/*
-      String accountType;
-     Double initialBalance;
-     Boolean accountStatus;
- */
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,8 +23,15 @@ import lombok.Generated;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class RQUpdateAccountDom {
 
-     String accountType;
-     Double initialBalance;
-     Boolean accountStatus;
-
+    @NotBlank(message = "Account type is required")
+    @Pattern(regexp = "^(SAVINGS|CHECKING|INVESTMENT)$", message = "Account type must be SAVINGS, CHECKING or INVESTMENT")
+    String accountType;
+    
+    @NotNull(message = "Initial balance is required")
+    @PositiveOrZero(message = "Initial balance must be zero or positive")
+    @DecimalMin(value = "0.0", message = "Initial balance cannot be negative")
+    Double initialBalance;
+    
+    @NotNull(message = "Account status is required")
+    Boolean accountStatus;
 }
